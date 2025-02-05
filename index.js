@@ -1,15 +1,25 @@
 const express = require('express');
-const { resolve } = require('path');
+const { connectDB } = require('./db');
 
 const app = express();
-const port = 3010;
 
-app.use(express.static('static'));
+require('dotenv').config();
+const port = process.env.PORT || 8080;
+const url = process.env.db_url;
 
-app.get('/', (req, res) => {
-  res.sendFile(resolve(__dirname, 'pages/index.html'));
+
+app.listen(port, async() => {
+
+  try{
+    await connectDB(url);
+    console.log(`Server is running on port ${port}`);
+  }
+  catch(error){
+    console.error(error);
+  }
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+
+app.get('/', (req, res) => {    
+    res.send('Hello World!');
 });
